@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <title>Dokuz Basamaklı Sayı Okuyucu</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; }
+    input { padding: 10px; width: 300px; font-size: 1rem; }
+    .bolukler { margin-top: 20px; display: flex; gap: 20px; }
+    .boluk { border: 1px solid #ccc; padding: 10px; border-radius: 10px; width: 120px; text-align: center; background-color: #f9f9f9; }
+    .okunus { margin-top: 30px; font-weight: bold; font-size: 1.2rem; }
+  </style>
+</head>
+<body>
+  <h2>Dokuz Basamaklı Sayı Okuyucu</h2>
+  <input type="text" id="sayiInput" placeholder="Bir sayı girin (örn. 123456789)" maxlength="9" oninput="isle()">
+
+  <div class="bolukler">
+    <div class="boluk">
+      <div><strong>Milyonlar</strong></div>
+      <div id="milyonlar">---</div>
+    </div>
+    <div class="boluk">
+      <div><strong>Binler</strong></div>
+      <div id="binler">---</div>
+    </div>
+    <div class="boluk">
+      <div><strong>Birler</strong></div>
+      <div id="birler">---</div>
+    </div>
+  </div>
+
+  <div class="okunus" id="okunus"></div>
+
+  <script>
+    const birler = ["", "bir", "iki", "üç", "dört", "beş", "altı", "yedi", "sekiz", "dokuz"];
+    const onlar = ["", "on", "yirmi", "otuz", "kırk", "elli", "altmış", "yetmiş", "seksen", "doksan"];
+
+    function bolukOku(sayi) {
+      let y = parseInt(sayi);
+      if (y === 0) return "";
+      let oku = "";
+      if (sayi.length < 3) sayi = sayi.padStart(3, '0');
+      let [yuz, on, bir] = sayi.split('').map(Number);
+      if (yuz > 0) oku += (yuz === 1 ? "yüz" : birler[yuz] + " yüz") + " ";
+      if (on > 0) oku += onlar[on] + " ";
+      if (bir > 0) oku += birler[bir];
+      return oku.trim();
+    }
+
+    function isle() {
+      const sayi = document.getElementById("sayiInput").value.padStart(9, '0');
+      if (!/^\\d{9}$/.test(sayi)) {
+        document.getElementById("okunus").innerText = "Lütfen 9 basamaklı bir sayı girin.";
+        return;
+      }
+      const milyon = sayi.slice(0,3);
+      const bin = sayi.slice(3,6);
+      const bir = sayi.slice(6);
+
+      document.getElementById("milyonlar").innerText = milyon;
+      document.getElementById("binler").innerText = bin;
+      document.getElementById("birler").innerText = bir;
+
+      let okunus = "";
+      if (parseInt(milyon) > 0) okunus += bolukOku(milyon) + " milyon ";
+      if (parseInt(bin) > 0) okunus += bolukOku(bin) + " bin ";
+      if (parseInt(bir) > 0 || sayi === "000000000") okunus += bolukOku(bir);
+
+      document.getElementById("okunus").innerText = okunus.trim();
+    }
+  </script>
+</body>
+</html>
